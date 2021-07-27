@@ -50,27 +50,31 @@ class MainPageController extends Cubit<MainPageStates> {
   void sendDataForServer(String token) async {
     emit(MainPageStateShowSnack(message: strSendingDataToServer));
     emit(MainPageStateLoading());
+
+    List<BarcodeRecordModel> barcodeList =
+        Hive.box<BarcodeRecordModel>(BARCODE_BOX).values.toList();
+
+    print(barcodeList.length);
+
     var client = http.Client();
     Map<String, String> requestHeaders = {
       'Content-type': 'Application/json',
       "Authorization": token
     };
-    Hive.box<BarcodeRecordModel>(BARCODE_BOX).values.forEach((barcode) async {
-      Response response = await client.post(
-          Uri(
-              host: API_BASE_URL,
-              path: "/checkpoint-histories/commit",
-              port: 8090,
-              scheme: "http"),
-          headers: requestHeaders,
-          body: jsonEncode(barcode.toJson()));
-      print(response.statusCode);
-      print(response.body);
-      if (response.statusCode == 200) {
-        print("here");
-      }
-    });
-    emit(MainPageStateInitial());
-    emit(MainPageStateShowSnack(message: strAllBarcodeSentSuccessfully));
+    Response response = await client.post(
+        Uri(
+            host: API_BASE_URL,
+            path: "/checkpoint-histories/commit",
+            port: 8090,
+            scheme: "http"),
+        headers: requestHeaders,
+        body: jsonEncode(
+            barcodeList.map((barcode) => barcode.toJson()).toList()));
+    print(response.statusCode);
+    print(response.body);
+    if (response.statusCode == 200) {
+      emit(MainPageStateInitial());
+      emit(MainPageStateShowSnack(message: strAllBarcodeSentSuccessfully));
+    }
   }
 }
