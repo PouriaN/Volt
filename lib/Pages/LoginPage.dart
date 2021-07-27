@@ -50,6 +50,7 @@ class LoginPage extends StatelessWidget {
                                 SizedBox(height: 10),
                                 CustomTextField(
                                     label: strPassword,
+                                    isObscure: true,
                                     controller: passwordController,
                                     prefixIcon: Icons.password),
                                 SizedBox(height: 15),

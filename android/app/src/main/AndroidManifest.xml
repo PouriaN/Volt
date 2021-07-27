@@ -1,6 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ir.ralley.racingmanager.racing_manager">
-   <application
+    <uses-permission android:name="android.permission.INTERNET" />
+    <application
         android:label="racing_manager"
         android:icon="@mipmap/ic_launcher">
         <activity
