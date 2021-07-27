@@ -75,6 +75,9 @@ class MainPageController extends Cubit<MainPageStates> {
     if (response.statusCode == 200) {
       emit(MainPageStateInitial());
       emit(MainPageStateShowSnack(message: strAllBarcodeSentSuccessfully));
+    } else {
+      emit(MainPageStateInitial());
+      emit(MainPageStateShowSnack(message: strSomthingWrong));
     }
   }
 }
