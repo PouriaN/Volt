@@ -77,7 +77,7 @@ class MainPageController extends Cubit<MainPageStates> {
       emit(MainPageStateShowSnack(message: strAllBarcodeSentSuccessfully));
     } else {
       emit(MainPageStateInitial());
-      emit(MainPageStateShowSnack(message: strSomthingWrong));
+      emit(MainPageStateShowSnack(message: strSomethingWrong));
     }
   }
 }
