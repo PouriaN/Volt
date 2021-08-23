@@ -4,11 +4,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:racing_manager/Controllers/MainPageController.dart';
+import 'package:racing_manager/Models/ReportModel.dart';
 import 'Controllers/LoginPageController.dart';
 import 'Models/BarcodeRecordModel.dart';
 import 'Models/EventModel.dart';
 import 'Pages/LoginPage.dart';
 import 'Pages/MainPage.dart';
+import 'Pages/ReportPage.dart';
 
 bool isLoggedIn = false;
 
@@ -17,6 +19,7 @@ void main() async {
 
   Hive.registerAdapter<BarcodeRecordModel>(BarcodeRecordModelAdapter());
   Hive.registerAdapter<EventModel>(EventModelAdapter());
+  Hive.registerAdapter<ReportModel>(ReportModelAdapter());
   await Hive.initFlutter();
 
   LoginPageController loginPageController = LoginPageController();
@@ -50,6 +53,7 @@ class _MyAppState extends State<MyApp> {
       routes: <String, WidgetBuilder>{
         '/LoginPage': (BuildContext context) => new LoginPage(),
         '/MainPage': (BuildContext context) => new MainPage(),
+        '/ReportPage': (BuildContext context) => new ReportPage(),
       },
     );
   }

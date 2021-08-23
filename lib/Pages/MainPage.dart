@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:racing_manager/Components/CustomDialog.dart';
 import 'package:racing_manager/Components/MainButton.dart';
 import 'package:racing_manager/Controllers/LoginPageController.dart';
 import 'package:racing_manager/Controllers/MainPageController.dart';
@@ -59,17 +60,16 @@ class MainPage extends StatelessWidget {
       ),
       body: BlocConsumer<MainPageController, MainPageStates>(
         listener: (context, state) {
-          if (state is MainPageStateShowDialog) {
+          if (state is MainPageStateShowScanDialog) {
             showDialog(
                 context: context, builder: (context) => scanDialog(context));
-          } else if (state is MainPageStateShowSnack) {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text(state.message)));
+          } else if (state is MainPageStateShowMessageDialog) {
+            showDialog(context: context, builder: (context) => CustomDialog(message: state.message, messageColor: state.messageColor));
           }
         },
         buildWhen: (oldState, newState) =>
-            newState is! MainPageStateShowDialog &&
-            newState is! MainPageStateShowSnack,
+            newState is! MainPageStateShowScanDialog &&
+            newState is! MainPageStateShowMessageDialog,
         builder: (context, state) => Stack(
           children: [
             Padding(
@@ -79,6 +79,7 @@ class MainPage extends StatelessWidget {
                 children: [
                   MainButton(
                       text: strScan,
+                      enable: state is! MainPageStateLoading,
                       callBack: () =>
                           context.read<MainPageController>().showScanDialog()),
                   MainButton(
@@ -87,10 +88,26 @@ class MainPage extends StatelessWidget {
                       color: Colors.redAccent,
                       callBack: () => context
                           .read<MainPageController>()
-                          .sendDataForServer(context
+                          .sendBarcodeDataForServer(context
                               .read<LoginPageController>()
                               .loginResponseModel
-                              .authorization!))
+                              .authorization!)),
+                  Divider(color: Colors.white, thickness: 1),
+                  MainButton(
+                      text: strCreateReport,
+                      enable: state is! MainPageStateLoading,
+                      callBack: () =>
+                          Navigator.pushNamed(context, "/ReportPage")),
+                  MainButton(
+                      text: strSendReportsToServer,
+                      enable: state is! MainPageStateLoading,
+                      color: Colors.redAccent,
+                      callBack: () => context
+                          .read<MainPageController>()
+                          .sendReportDataForServer(context
+                              .read<LoginPageController>()
+                              .loginResponseModel
+                              .authorization!)),
                 ],
               ),
             ),

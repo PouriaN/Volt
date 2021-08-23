@@ -8,3 +8,6 @@ TextStyle textThemeFields = TextStyle(fontSize: 18);
 
 
 TextStyle textThemeMainButton = TextStyle(fontSize: 18);
+
+
+TextStyle dialogMessageTextTheme = TextStyle(fontSize: 17);

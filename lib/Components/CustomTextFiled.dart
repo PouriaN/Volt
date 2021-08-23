@@ -7,6 +7,9 @@ class CustomTextField extends TextFormField {
   final TextEditingController controller;
   final IconData? suffixIcon;
   final IconData? prefixIcon;
+  final TextInputType? inputType;
+  final TextAlignVertical? alignVertical;
+  final bool expand;
   final void Function(bool isObscure)? onPrefixPressed;
 
   CustomTextField(
@@ -15,11 +18,19 @@ class CustomTextField extends TextFormField {
       this.isObscure = false,
       this.onPrefixPressed,
       this.suffixIcon,
+      this.inputType,
+      this.alignVertical,
+      this.expand = false,
       this.prefixIcon})
       : super(
+          keyboardType: inputType,
           controller: controller,
+          // expands: expand,
           obscureText: isObscure,
+          maxLines: expand ? null : 1,
+          minLines: expand ? 3 : 1,
           style: textThemeFields,
+          textAlignVertical: alignVertical,
           decoration: InputDecoration(
             isDense: false,
             hintStyle: textThemeFieldsHint,
@@ -37,9 +48,14 @@ class CustomTextField extends TextFormField {
             prefixIcon: prefixIcon != null
                 ? Builder(
                     builder: (context) => Padding(
-                      padding: EdgeInsets.only(left: 20, right: 20),
-                      child: Icon(prefixIcon,
-                          color: Theme.of(context).primaryColor),
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(prefixIcon,
+                              color: Theme.of(context).primaryColor),
+                        ],
+                      ),
                     ),
                   )
                 : null,
