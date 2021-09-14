@@ -16,7 +16,7 @@ class CustomDialog extends Dialog {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Text(message, style: dialogMessageTextTheme.copyWith(color: messageColor)),
+                Text(message, style: dialogMessageTextTheme.copyWith(color: messageColor),textAlign: TextAlign.center),
                 ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(messageColor)

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:racing_manager/Components/CustomDialog.dart';
 import 'package:racing_manager/Components/MainButton.dart';
 import 'package:racing_manager/Controllers/LoginPageController.dart';
 import 'package:racing_manager/Controllers/MainPageController.dart';
+import 'package:racing_manager/Models/BarcodeRecordModel.dart';
+import 'package:racing_manager/Resources/Constants.dart';
 import 'package:racing_manager/Resources/Strings.dart';
 
 class MainPage extends StatelessWidget {
@@ -27,7 +30,11 @@ class MainPage extends StatelessWidget {
                         context
                             .read<LoginPageController>()
                             .loginResponseModel
-                            .userId!);
+                            .userId!,
+                        context
+                            .read<LoginPageController>()
+                            .loginResponseModel
+                            .authorization!);
                   });
                 },
               ),
@@ -52,8 +59,10 @@ class MainPage extends StatelessWidget {
         actions: [
           IconButton(
               onPressed: () async {
-                await context.read<LoginPageController>().logOut();
-                Phoenix.rebirth(context);
+                if (context.read<MainPageController>().canLogOut()) {
+                  await context.read<LoginPageController>().logOut();
+                  Phoenix.rebirth(context);
+                }
               },
               icon: Icon(Icons.login_rounded))
         ],
@@ -64,7 +73,10 @@ class MainPage extends StatelessWidget {
             showDialog(
                 context: context, builder: (context) => scanDialog(context));
           } else if (state is MainPageStateShowMessageDialog) {
-            showDialog(context: context, builder: (context) => CustomDialog(message: state.message, messageColor: state.messageColor));
+            showDialog(
+                context: context,
+                builder: (context) => CustomDialog(
+                    message: state.message, messageColor: state.messageColor));
           }
         },
         buildWhen: (oldState, newState) =>

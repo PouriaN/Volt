@@ -1,12 +1,15 @@
+import 'dart:convert';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:racing_manager/Components/CustomDialog.dart';
 import 'package:racing_manager/Components/CustomTextFiled.dart';
 import 'package:racing_manager/Components/MainButton.dart';
+import 'package:racing_manager/Controllers/LoginPageController.dart';
 import 'package:racing_manager/Models/ReportModel.dart';
-import 'package:racing_manager/Pages/MainPage.dart';
 import 'package:racing_manager/Resources/Constants.dart';
 import 'package:racing_manager/Resources/Strings.dart';
+import 'package:http/http.dart' as http;
 
 enum ReportType {
   OTHER,
@@ -47,6 +50,24 @@ class ReportPage extends StatelessWidget {
   ];
   ReportType? selectedReportType;
 
+  Future<http.Response> _sendData(
+      {required String address,
+      required String body,
+      required String token}) async {
+    var client = http.Client();
+    Map<String, String> requestHeaders = {
+      'Content-type': 'Application/json',
+      "Authorization": token
+    };
+    http.Response response = await client.post(
+        Uri(host: API_BASE_URL, path: address, port: 8090, scheme: "http"),
+        headers: requestHeaders,
+        body: body);
+    print(response.statusCode);
+    print(response.body);
+    return response;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,18 +106,44 @@ class ReportPage extends StatelessWidget {
                   if (competitorController.text.isNotEmpty &&
                       descController.text.isNotEmpty &&
                       selectedReportType != null) {
-                    await Hive.openBox<ReportModel>(REPORT_BOX);
-                    await Hive.box<ReportModel>(REPORT_BOX).add(ReportModel(
+                    ReportModel report = ReportModel(
                         competitorNumber: int.parse(competitorController.text),
-                        descriptions: descController.text,
-                        type: selectedReportType.toString(),
-                        time: DateTime.now().toString()));
-                    await showDialog(
-                      context: context,
-                      builder: (ctx) =>
-                          CustomDialog(message: strReportAddedSuccessfully),
-                    );
-                    Navigator.pop(context);
+                        description: descController.text,
+                        type: selectedReportType.toString().split(".")[1],
+                        time: DateTime.now().toIso8601String());
+
+                    try {
+                      http.Response response = await _sendData(
+                          address: "/competitor-histories/commit",
+                          body: jsonEncode([report]),
+                          token: context
+                              .read<LoginPageController>()
+                              .loginResponseModel
+                              .authorization!);
+
+                      if (response.statusCode == 200) {
+                        await showDialog(
+                          context: context,
+                          builder: (ctx) => CustomDialog(
+                              message: strThisReportSentToServerSuccessfully),
+                        );
+                        Navigator.pop(context);
+                      } else {
+                        await showDialog(
+                          context: context,
+                          builder: (ctx) => CustomDialog(
+                              message: jsonDecode(response.body)["message"], messageColor: Colors.red),
+                        );
+                      }
+                    } on Exception catch (e) {
+                      await Hive.box<ReportModel>(REPORT_BOX).add(report);
+                      await showDialog(
+                        context: context,
+                        builder: (ctx) => CustomDialog(
+                            message: strReportAddedToLocalSuccessfully),
+                      );
+                      Navigator.pop(context);
+                    }
                   } else {
                     await showDialog(
                       context: context,

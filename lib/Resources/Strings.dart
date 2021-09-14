@@ -8,12 +8,15 @@ const String strCreateReport = "Create Report";
 const String strSendReportsToServer = "Send Reports To Server";
 
 
-const String strBarcodeAddedSuccessfully = "Barcode added successfully";
+const String strBarcodeAddedToLocalSuccessfully = "No internet connection. Barcode added to local successfully";
 const String strSendingBarcodesDataToServer = "Sending barcodes data to server ...";
 const String strSendingReportsDataToServer = "Sending reports data to server ...";
 const String strAllBarcodeSentSuccessfully = "All barcode data sent successfully.";
 const String strAllReportsSentSuccessfully = "All reports data sent successfully.";
 const String strSomethingWrong = "Error: Something wrong.";
+const String strFirstYouHaveToSendDataToServer = "Error: First, Send data to the server then try again";
+const String strThisReportSentToServerSuccessfully = "This report sent to server successfully";
+const String strThisBarcodeDataSentSuccessfully = "This barcode data sent to server successfully";
 
 
 const String strCompetitorNumber = "Competitor Number";
@@ -30,8 +33,9 @@ const String strStopInMarshalRangeView = "Stop In Marshal Range View";
 const String strReverseGear = "Reverse Gear";
 const String strDangerousMovement = "Dangerous Movement";
 const String strTurnInControlArea = "Turn In Control Area";
-const String strReportAddedSuccessfully = "Report added successfully.";
+const String strReportAddedToLocalSuccessfully = "No internet connection. Report added to local successfully.";
 const String strFirstEnterValues = "Error: First enter values.";
+const String strYouNeedInternetConnection = "Error: There is no internet connection.";
 
 
 const String strOK = "Ok";

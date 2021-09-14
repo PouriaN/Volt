@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:http/http.dart';
 import 'package:racing_manager/Models/BarcodeDataModel.dart';
 import 'package:racing_manager/Models/BarcodeRecordModel.dart';
 import 'package:racing_manager/Models/EventModel.dart';
@@ -39,17 +38,35 @@ class MainPageController extends Cubit<MainPageStates> {
 
   void showScanDialog() => emit(MainPageStateShowScanDialog());
 
-  void gotNewScan(String barcodeData, int userId) async {
+  void gotNewScan(String barcodeData, int userId, String token) async {
     BarcodeDataModel barcode =
         BarcodeDataModel.fromJson(jsonDecode(barcodeData));
 
     BarcodeRecordModel barcodeRecord = BarcodeRecordModel(
-      actualTime: DateTime.now().toString(),
+      actualTime: DateTime.now().toIso8601String(),
       competitor: EventModel(id: barcode.competitorId),
       event: EventModel(id: barcode.eventId),
     );
-    await Hive.box<BarcodeRecordModel>(BARCODE_BOX).add(barcodeRecord);
-    emit(MainPageStateShowMessageDialog(message: strBarcodeAddedSuccessfully));
+    try {
+      http.Response response = await _sendData(
+          address: "/checkpoint-histories/commit",
+          body: jsonEncode([barcodeRecord]),
+          token: token);
+      if (response.statusCode == 200) {
+        emit(MainPageStateInitial());
+        emit(MainPageStateShowMessageDialog(
+            message: strThisBarcodeDataSentSuccessfully));
+      } else {
+        emit(MainPageStateInitial());
+        emit(MainPageStateShowMessageDialog(
+            message: jsonDecode(response.body)["message"],
+            messageColor: Colors.red));
+      }
+    } on Exception catch (e) {
+      await Hive.box<BarcodeRecordModel>(BARCODE_BOX).add(barcodeRecord);
+      emit(MainPageStateShowMessageDialog(
+          message: strBarcodeAddedToLocalSuccessfully));
+    }
   }
 
   void sendBarcodeDataForServer(String token) async {
@@ -60,28 +77,27 @@ class MainPageController extends Cubit<MainPageStates> {
 
     print(barcodeList.length);
 
-    var client = http.Client();
-    Map<String, String> requestHeaders = {
-      'Content-type': 'Application/json',
-      "Authorization": token
-    };
-    Response response = await client.post(
-        Uri(
-            host: API_BASE_URL,
-            path: "/checkpoint-histories/commit",
-            port: 8090,
-            scheme: "http"),
-        headers: requestHeaders,
-        body: jsonEncode(
-            barcodeList.map((barcode) => barcode.toJson()).toList()));
-    print(response.statusCode);
-    print(response.body);
-    if (response.statusCode == 200) {
+    try {
+      http.Response response = await _sendData(
+          address: "/checkpoint-histories/commit",
+          body: jsonEncode(
+              barcodeList.map((barcode) => barcode.toJson()).toList()),
+          token: token);
+
+      if (response.statusCode == 200) {
+        Hive.box<BarcodeRecordModel>(BARCODE_BOX).clear();
+        emit(MainPageStateInitial());
+        emit(MainPageStateShowMessageDialog(
+            message: strAllBarcodeSentSuccessfully));
+      } else {
+        emit(MainPageStateInitial());
+        emit(MainPageStateShowMessageDialog(
+            message: strSomethingWrong, messageColor: Colors.red));
+      }
+    } on Exception catch (e) {
       emit(MainPageStateInitial());
-      emit(MainPageStateShowMessageDialog(message: strAllBarcodeSentSuccessfully));
-    } else {
-      emit(MainPageStateInitial());
-      emit(MainPageStateShowMessageDialog(message: strSomethingWrong,messageColor: Colors.red));
+      emit(MainPageStateShowMessageDialog(
+          message: strYouNeedInternetConnection, messageColor: Colors.red));
     }
   }
 
@@ -93,28 +109,57 @@ class MainPageController extends Cubit<MainPageStates> {
 
     print(reportsList.length);
 
+    try {
+      http.Response response = await _sendData(
+          address: "/competitor-histories/commit",
+          body:
+              jsonEncode(reportsList.map((report) => report.toJson()).toList()),
+          token: token);
+
+      if (response.statusCode == 200) {
+        Hive.box<ReportModel>(REPORT_BOX).clear();
+        emit(MainPageStateInitial());
+        emit(MainPageStateShowMessageDialog(
+            message: strAllReportsSentSuccessfully));
+      } else {
+        emit(MainPageStateInitial());
+        emit(MainPageStateShowMessageDialog(
+            message: strSomethingWrong, messageColor: Colors.red));
+      }
+    } on Exception catch (e) {
+      emit(MainPageStateInitial());
+      emit(MainPageStateShowMessageDialog(
+          message: strYouNeedInternetConnection, messageColor: Colors.red));
+    }
+  }
+
+  Future<http.Response> _sendData(
+      {required String address,
+      required String body,
+      required String token}) async {
     var client = http.Client();
     Map<String, String> requestHeaders = {
       'Content-type': 'Application/json',
       "Authorization": token
     };
-    Response response = await client.post(
-        Uri(
-            host: API_BASE_URL,
-            path: "/competitor-histories/commit",
-            port: 8090,
-            scheme: "http"),
+    http.Response response = await client.post(
+        Uri(host: API_BASE_URL, path: address, port: 8090, scheme: "http"),
         headers: requestHeaders,
-        body: jsonEncode(
-            reportsList.map((report) => report.toJson()).toList()));
+        body: body);
     print(response.statusCode);
     print(response.body);
-    if (response.statusCode == 200) {
-      emit(MainPageStateInitial());
-      emit(MainPageStateShowMessageDialog(message: strAllReportsSentSuccessfully));
-    } else {
-      emit(MainPageStateInitial());
-      emit(MainPageStateShowMessageDialog(message: strSomethingWrong,messageColor: Colors.red));
+    return response;
+  }
+
+  bool canLogOut() {
+    if (Hive.box<BarcodeRecordModel>(BARCODE_BOX).values.length == 0 &&
+        Hive.box<ReportModel>(REPORT_BOX).values.length == 0)
+      return true;
+    else {
+      emit(MainPageStateShowMessageDialog(
+          message: strFirstYouHaveToSendDataToServer,
+          messageColor: Colors.red));
+      return false;
     }
   }
 }
