@@ -90,12 +90,12 @@ class MainPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   MainButton(
-                      text: strScan,
+                      text: strScanParticipant,
                       enable: state is! MainPageStateLoading,
                       callBack: () =>
                           context.read<MainPageController>().showScanDialog()),
                   MainButton(
-                      text: strSendToServer,
+                      text: strSendScanToServer,
                       enable: state is! MainPageStateLoading,
                       color: Colors.redAccent,
                       callBack: () => context

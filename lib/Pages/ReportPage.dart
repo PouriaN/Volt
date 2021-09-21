@@ -12,7 +12,6 @@ import 'package:racing_manager/Resources/Strings.dart';
 import 'package:http/http.dart' as http;
 
 enum ReportType {
-  OTHER,
   PASS_CONTROL,
   ENTER_IN_GATE_FROM_WRONG_PATH,
   NOT_FASTEN_SEAT_BELT,
@@ -46,7 +45,6 @@ class ReportPage extends StatelessWidget {
     DropdownMenuItem(
         value: ReportType.TURN_IN_CONTROL_AREA,
         child: Text(strTurnInControlArea)),
-    DropdownMenuItem(value: ReportType.OTHER, child: Text(strOther)),
   ];
   ReportType? selectedReportType;
 
@@ -132,7 +130,8 @@ class ReportPage extends StatelessWidget {
                         await showDialog(
                           context: context,
                           builder: (ctx) => CustomDialog(
-                              message: jsonDecode(response.body)["message"], messageColor: Colors.red),
+                              message: jsonDecode(response.body)["message"],
+                              messageColor: Colors.red),
                         );
                       }
                     } on Exception catch (e) {

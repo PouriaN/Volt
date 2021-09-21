@@ -50,7 +50,7 @@ class MainPageController extends Cubit<MainPageStates> {
     try {
       http.Response response = await _sendData(
           address: "/checkpoint-histories/commit",
-          body: jsonEncode([barcodeRecord]),
+          body: jsonEncode([barcodeRecord.toJson()]),
           token: token);
       if (response.statusCode == 200) {
         emit(MainPageStateInitial());
