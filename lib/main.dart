@@ -49,7 +49,7 @@ class _MyAppState extends State<MyApp> {
         primaryColor: Colors.blueAccent,
         accentColor: Colors.cyan,
       ),
-      builder: (context, child) => Directionality(textDirection: TextDirection.rtl, child: child!*/),
+      builder: (context, child) => Directionality(textDirection: TextDirection.rtl, child: child!),
       initialRoute: isLoggedIn ? "/MainPage" : "/LoginPage",
       routes: <String, WidgetBuilder>{
         '/LoginPage': (BuildContext context) => new LoginPage(),
