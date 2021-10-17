@@ -42,8 +42,8 @@ class LoginPageController extends Cubit<LoginPageStates> {
         Uri(
             host: API_BASE_URL,
             path: "/auth/login/",
-            port: 8090,
-            scheme: "http"),
+            port: SERVER_PORT,
+            scheme: REQUEST_SCHEME),
         headers: requestHeaders,
         body: jsonEncode({"username": username, "password": password}));
     emit(LoginPageStateInitial());

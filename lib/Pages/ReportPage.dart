@@ -58,7 +58,7 @@ class ReportPage extends StatelessWidget {
       "Authorization": token
     };
     http.Response response = await client.post(
-        Uri(host: API_BASE_URL, path: address, port: 8090, scheme: "http"),
+        Uri(host: API_BASE_URL, path: address, port: SERVER_PORT, scheme: REQUEST_SCHEME),
         headers: requestHeaders,
         body: body);
     print(response.statusCode);
