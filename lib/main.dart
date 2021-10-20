@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:racing_manager/Controllers/MainPageController.dart';
 import 'package:racing_manager/Models/ReportModel.dart';
@@ -25,12 +24,11 @@ void main() async {
   LoginPageController loginPageController = LoginPageController();
   isLoggedIn = await loginPageController.checkForLogin();
 
-  runApp(Phoenix(
-      child: MultiBlocProvider(providers: [
+  runApp(MultiBlocProvider(providers: [
     BlocProvider<LoginPageController>.value(value: loginPageController),
     BlocProvider<MainPageController>(
         create: (context) => MainPageController(), lazy: false),
-  ], child: MyApp())));
+  ], child: MyApp()));
 }
 
 class MyApp extends StatefulWidget {
@@ -49,7 +47,8 @@ class _MyAppState extends State<MyApp> {
         primaryColor: Colors.blueAccent,
         accentColor: Colors.cyan,
       ),
-      builder: (context, child) => Directionality(textDirection: TextDirection.rtl, child: child!),
+      builder: (context, child) =>
+          Directionality(textDirection: TextDirection.rtl, child: child!),
       initialRoute: isLoggedIn ? "/MainPage" : "/LoginPage",
       routes: <String, WidgetBuilder>{
         '/LoginPage': (BuildContext context) => new LoginPage(),

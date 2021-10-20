@@ -77,27 +77,32 @@ class MainPageController extends Cubit<MainPageStates> {
 
     print(barcodeList.length);
 
-    try {
-      http.Response response = await _sendData(
-          address: "/checkpoint-histories/commit",
-          body: jsonEncode(
-              barcodeList.map((barcode) => barcode.toJson()).toList()),
-          token: token);
+    if (barcodeList.length != 0) {
+      try {
+        http.Response response = await _sendData(
+            address: "/checkpoint-histories/commit",
+            body: jsonEncode(
+                barcodeList.map((barcode) => barcode.toJson()).toList()),
+            token: token);
 
-      if (response.statusCode == 200) {
-        Hive.box<BarcodeRecordModel>(BARCODE_BOX).clear();
+        if (response.statusCode == 200) {
+          Hive.box<BarcodeRecordModel>(BARCODE_BOX).clear();
+          emit(MainPageStateInitial());
+          emit(MainPageStateShowMessageDialog(
+              message: strAllBarcodeSentSuccessfully));
+        } else {
+          emit(MainPageStateInitial());
+          emit(MainPageStateShowMessageDialog(
+              message: strSomethingWrong, messageColor: Colors.red));
+        }
+      } on Exception catch (e) {
         emit(MainPageStateInitial());
         emit(MainPageStateShowMessageDialog(
-            message: strAllBarcodeSentSuccessfully));
-      } else {
-        emit(MainPageStateInitial());
-        emit(MainPageStateShowMessageDialog(
-            message: strSomethingWrong, messageColor: Colors.red));
+            message: strYouNeedInternetConnection, messageColor: Colors.red));
       }
-    } on Exception catch (e) {
+    } else {
       emit(MainPageStateInitial());
-      emit(MainPageStateShowMessageDialog(
-          message: strYouNeedInternetConnection, messageColor: Colors.red));
+      emit(MainPageStateShowMessageDialog(message: strThereIsNoDataToSend));
     }
   }
 
@@ -109,27 +114,32 @@ class MainPageController extends Cubit<MainPageStates> {
 
     print(reportsList.length);
 
-    try {
-      http.Response response = await _sendData(
-          address: "/competitor-histories/commit",
-          body:
-              jsonEncode(reportsList.map((report) => report.toJson()).toList()),
-          token: token);
+    if (reportsList.length != 0) {
+      try {
+        http.Response response = await _sendData(
+            address: "/competitor-histories/commit",
+            body: jsonEncode(
+                reportsList.map((report) => report.toJson()).toList()),
+            token: token);
 
-      if (response.statusCode == 200) {
-        Hive.box<ReportModel>(REPORT_BOX).clear();
+        if (response.statusCode == 200) {
+          Hive.box<ReportModel>(REPORT_BOX).clear();
+          emit(MainPageStateInitial());
+          emit(MainPageStateShowMessageDialog(
+              message: strAllReportsSentSuccessfully));
+        } else {
+          emit(MainPageStateInitial());
+          emit(MainPageStateShowMessageDialog(
+              message: strSomethingWrong, messageColor: Colors.red));
+        }
+      } on Exception catch (e) {
         emit(MainPageStateInitial());
         emit(MainPageStateShowMessageDialog(
-            message: strAllReportsSentSuccessfully));
-      } else {
-        emit(MainPageStateInitial());
-        emit(MainPageStateShowMessageDialog(
-            message: strSomethingWrong, messageColor: Colors.red));
+            message: strYouNeedInternetConnection, messageColor: Colors.red));
       }
-    } on Exception catch (e) {
+    } else {
       emit(MainPageStateInitial());
-      emit(MainPageStateShowMessageDialog(
-          message: strYouNeedInternetConnection, messageColor: Colors.red));
+      emit(MainPageStateShowMessageDialog(message: strThereIsNoDataToSend));
     }
   }
 
@@ -143,7 +153,11 @@ class MainPageController extends Cubit<MainPageStates> {
       "Authorization": token
     };
     http.Response response = await client.post(
-        Uri(host: API_BASE_URL, path: address, port: SERVER_PORT, scheme: REQUEST_SCHEME),
+        Uri(
+            host: API_BASE_URL,
+            path: address,
+            port: SERVER_PORT,
+            scheme: REQUEST_SCHEME),
         headers: requestHeaders,
         body: body);
     print(response.statusCode);

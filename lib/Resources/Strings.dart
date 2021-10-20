@@ -35,6 +35,7 @@ const String strTurnInControlArea = "دور زدن در محدوده کنترل"
 const String strReportAddedToLocalSuccessfully = "No internet connection. Report added to local successfully";
 const String strFirstEnterValues = "Error: First enter values";
 const String strYouNeedInternetConnection = "Error: There is no internet connection";
+const String strThereIsNoDataToSend = "There is no data to send";
 
 
 const String strOK = "Ok";

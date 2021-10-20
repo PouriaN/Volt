@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_phoenix/flutter_phoenix.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:racing_manager/Components/CustomDialog.dart';
 import 'package:racing_manager/Components/MainButton.dart';
 import 'package:racing_manager/Controllers/LoginPageController.dart';
 import 'package:racing_manager/Controllers/MainPageController.dart';
-import 'package:racing_manager/Models/BarcodeRecordModel.dart';
-import 'package:racing_manager/Resources/Constants.dart';
 import 'package:racing_manager/Resources/Strings.dart';
+import 'package:restart_app/restart_app.dart';
 
 class MainPage extends StatelessWidget {
   Dialog scanDialog(BuildContext context) => Dialog(
@@ -59,9 +56,12 @@ class MainPage extends StatelessWidget {
         actions: [
           IconButton(
               onPressed: () async {
+                print("sdsd");
                 if (context.read<MainPageController>().canLogOut()) {
+                  print("2323");
                   await context.read<LoginPageController>().logOut();
-                  Phoenix.rebirth(context);
+                  print("after logout");
+                  Restart.restartApp();
                 }
               },
               icon: Icon(Icons.login_rounded))

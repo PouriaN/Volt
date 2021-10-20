@@ -59,5 +59,6 @@ class LoginPageController extends Cubit<LoginPageStates> {
   Future<void> logOut() async {
     await shPrefs.setBool("isLoggedIn", false);
     await shPrefs.remove("LoginDetail");
+    return;
   }
 }
