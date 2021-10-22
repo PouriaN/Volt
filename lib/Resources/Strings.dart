@@ -8,14 +8,12 @@ const String strCreateReport = "ثبت گزارش تخلف";
 const String strSendReportsToServer = "ارسال گزارش تخلفات به سرور";
 
 
-const String strBarcodeAddedToLocalSuccessfully = "No internet connection. Barcode added to local successfully";
+const String strBarcodeAddedToLocalSuccessfully = "خطا در اتصال اینترنت. کیو-آر کد بر روی دستگاه ذخیره شد";
+const String strReportAddedToLocalSuccessfully = "خطا در اتصال اینترنت. گزارش بر روی دستگاه ذخیره شد";
 
-const String strAllBarcodeSentSuccessfully = "All barcode data sent successfully";
-const String strAllReportsSentSuccessfully = "All reports data sent successfully";
-const String strSomethingWrong = "Error: Something wrong";
-const String strFirstYouHaveToSendDataToServer = "Error: First, Send data to the server then try again";
-const String strThisReportSentToServerSuccessfully = "This report sent to server successfully";
-const String strThisBarcodeDataSentSuccessfully = "This barcode data sent to server successfully";
+const String strFirstYouHaveToSendDataToServer = "ابتدا اطلاعات ذخیره شده را ارسال کنید کنید";
+const String strThisReportSentToServerSuccessfully = "این گزارش با موفقیت به سرور ارسال شد";
+const String strThisBarcodeDataSentSuccessfully = "این کیو-آر کد با موفقیت به سرور ارسال شد";
 
 
 const String strCompetitorNumber = "شماره شرکت کننده";
@@ -32,10 +30,11 @@ const String strReverseGear = "ورود دنده عقب به محدوده کنت
 const String strDangerousMovement = "رانندگی خطرناک";
 const String strTurnInControlArea = "دور زدن در محدوده کنترل";
 
-const String strReportAddedToLocalSuccessfully = "No internet connection. Report added to local successfully";
-const String strFirstEnterValues = "Error: First enter values";
-const String strYouNeedInternetConnection = "Error: There is no internet connection";
-const String strThereIsNoDataToSend = "There is no data to send";
+const String strFirstEnterValues = "خطا: ابتدا مقادیر را وارد کنید";
+const String strThereIsNoDataToSend = "اطلاعاتی برای ارسال وجود ندارد";
+
+const String strSent = "ارسال شد";
+const String strDoesNotSend = "ارسال نشد";
 
 
-const String strOK = "Ok";
+const String strOK = "بسیار خب";

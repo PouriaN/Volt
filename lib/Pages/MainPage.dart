@@ -19,6 +19,7 @@ class MainPage extends StatelessWidget {
                 key: GlobalKey(debugLabel: 'QR'),
                 onQRViewCreated: (QRViewController controller) {
                   controller.scannedDataStream.listen((scanData) {
+                    print(scanData);
                     controller.pauseCamera();
                     controller.dispose();
                     Navigator.pop(context);
@@ -56,11 +57,8 @@ class MainPage extends StatelessWidget {
         actions: [
           IconButton(
               onPressed: () async {
-                print("sdsd");
                 if (context.read<MainPageController>().canLogOut()) {
-                  print("2323");
                   await context.read<LoginPageController>().logOut();
-                  print("after logout");
                   Restart.restartApp();
                 }
               },
@@ -76,12 +74,12 @@ class MainPage extends StatelessWidget {
             showDialog(
                 context: context,
                 builder: (context) => CustomDialog(
-                    message: state.message, messageColor: state.messageColor));
+                    messages: state.messages,
+                    messageColor: state.messageColor));
           }
         },
         buildWhen: (oldState, newState) =>
-            newState is! MainPageStateShowScanDialog &&
-            newState is! MainPageStateShowMessageDialog,
+            newState is! MainPageStateShowScanDialog,
         builder: (context, state) => Stack(
           children: [
             Padding(
@@ -95,15 +93,27 @@ class MainPage extends StatelessWidget {
                       callBack: () =>
                           context.read<MainPageController>().showScanDialog()),
                   MainButton(
-                      text: strSendScanToServer,
-                      enable: state is! MainPageStateLoading,
-                      color: Colors.redAccent,
-                      callBack: () => context
-                          .read<MainPageController>()
-                          .sendBarcodeDataForServer(context
-                              .read<LoginPageController>()
-                              .loginResponseModel
-                              .authorization!)),
+                    text: strSendScanToServer,
+                    enable: state is! MainPageStateLoading,
+                    color: Colors.redAccent,
+                    callBack: () => context
+                        .read<MainPageController>()
+                        .sendBarcodeDataForServer(context
+                            .read<LoginPageController>()
+                            .loginResponseModel
+                            .authorization!)),
+                  //   callBack: () {
+                  //     context
+                  //         .read<MainPageController>()
+                  //         .emit(MainPageStateShowMessageDialog(messages: [
+                  //           "233: ارسال شده",
+                  //           "233: ارسال شده",
+                  //           "233: ارسال شده",
+                  //           "233: ارسال شده",
+                  //           "233: ارسال شده",
+                  //         ]));
+                  //   },
+                  // ),
                   Divider(color: Colors.white, thickness: 1),
                   MainButton(
                       text: strCreateReport,

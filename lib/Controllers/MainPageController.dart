@@ -1,7 +1,8 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:racing_manager/Models/BarcodeDataModel.dart';
@@ -20,10 +21,10 @@ class MainPageStateLoading extends MainPageStates {}
 class MainPageStateShowScanDialog extends MainPageStates {}
 
 class MainPageStateShowMessageDialog extends MainPageStates {
-  final String message;
+  final List<String> messages;
   final Color? messageColor;
 
-  MainPageStateShowMessageDialog({this.messageColor, required this.message});
+  MainPageStateShowMessageDialog({this.messageColor, required this.messages});
 }
 
 class MainPageController extends Cubit<MainPageStates> {
@@ -43,66 +44,65 @@ class MainPageController extends Cubit<MainPageStates> {
         BarcodeDataModel.fromJson(jsonDecode(barcodeData));
 
     BarcodeRecordModel barcodeRecord = BarcodeRecordModel(
-      actualTime: DateTime.now().toIso8601String(),
+      actualTime: DateTime.now().toUtc().toIso8601String(),
       competitor: EventModel(id: barcode.competitorId),
       event: EventModel(id: barcode.eventId),
     );
     try {
-      http.Response response = await _sendData(
+      Response response = await _sendData(
           address: "/checkpoint-histories/commit",
           body: jsonEncode([barcodeRecord.toJson()]),
           token: token);
       if (response.statusCode == 200) {
         emit(MainPageStateInitial());
         emit(MainPageStateShowMessageDialog(
-            message: strThisBarcodeDataSentSuccessfully));
+            messages: [strThisBarcodeDataSentSuccessfully]));
       } else {
         emit(MainPageStateInitial());
         emit(MainPageStateShowMessageDialog(
-            message: jsonDecode(response.body)["message"],
+            messages: [jsonDecode(response.body)["message"]],
             messageColor: Colors.red));
       }
-    } on Exception catch (e) {
-      await Hive.box<BarcodeRecordModel>(BARCODE_BOX).add(barcodeRecord);
+    } on Exception {
+      await Hive.box<BarcodeRecordModel>(BARCODE_BOX).put(barcodeRecord.actualTime,barcodeRecord);
       emit(MainPageStateShowMessageDialog(
-          message: strBarcodeAddedToLocalSuccessfully));
+          messages: [strBarcodeAddedToLocalSuccessfully]));
     }
   }
 
   void sendBarcodeDataForServer(String token) async {
     emit(MainPageStateLoading());
-
     List<BarcodeRecordModel> barcodeList =
         Hive.box<BarcodeRecordModel>(BARCODE_BOX).values.toList();
 
     print(barcodeList.length);
 
     if (barcodeList.length != 0) {
-      try {
-        http.Response response = await _sendData(
-            address: "/checkpoint-histories/commit",
-            body: jsonEncode(
-                barcodeList.map((barcode) => barcode.toJson()).toList()),
-            token: token);
+      List<String> responseList = <String>[];
 
-        if (response.statusCode == 200) {
-          Hive.box<BarcodeRecordModel>(BARCODE_BOX).clear();
-          emit(MainPageStateInitial());
-          emit(MainPageStateShowMessageDialog(
-              message: strAllBarcodeSentSuccessfully));
-        } else {
-          emit(MainPageStateInitial());
-          emit(MainPageStateShowMessageDialog(
-              message: strSomethingWrong, messageColor: Colors.red));
+      for (BarcodeRecordModel barcode
+          in barcodeList) {
+        try {
+          Response response = await _sendData(
+              address: "/checkpoint-histories/commit",
+              body: jsonEncode([barcode.toJson()]),
+              token: token);
+
+          if (response.statusCode == 200)
+            responseList.add("${barcode.competitor!.id}: $strSent");
+          else {
+            String message = jsonDecode(response.body)["message"];
+            responseList.add("${barcode.competitor!.id}: $message");
+          }
+          await Hive.box<BarcodeRecordModel>(BARCODE_BOX).delete(barcode.actualTime);
+        } on Exception {
+          responseList.add("${barcode.competitor!.id}: $strDoesNotSend");
         }
-      } on Exception catch (e) {
-        emit(MainPageStateInitial());
-        emit(MainPageStateShowMessageDialog(
-            message: strYouNeedInternetConnection, messageColor: Colors.red));
       }
+
+      emit(MainPageStateShowMessageDialog(messages: responseList));
     } else {
-      emit(MainPageStateInitial());
-      emit(MainPageStateShowMessageDialog(message: strThereIsNoDataToSend));
+      emit(MainPageStateShowMessageDialog(messages: [strThereIsNoDataToSend]));
     }
   }
 
@@ -115,44 +115,45 @@ class MainPageController extends Cubit<MainPageStates> {
     print(reportsList.length);
 
     if (reportsList.length != 0) {
-      try {
-        http.Response response = await _sendData(
-            address: "/competitor-histories/commit",
-            body: jsonEncode(
-                reportsList.map((report) => report.toJson()).toList()),
-            token: token);
+      List<String> responseList = [];
 
-        if (response.statusCode == 200) {
-          Hive.box<ReportModel>(REPORT_BOX).clear();
-          emit(MainPageStateInitial());
-          emit(MainPageStateShowMessageDialog(
-              message: strAllReportsSentSuccessfully));
-        } else {
-          emit(MainPageStateInitial());
-          emit(MainPageStateShowMessageDialog(
-              message: strSomethingWrong, messageColor: Colors.red));
+      for (ReportModel report in reportsList) {
+        try {
+          Response response = await _sendData(
+              address: "/competitor-histories/commit",
+              body: jsonEncode([report.toJson()]),
+              token: token);
+
+          if (response.statusCode == 200)
+            responseList.add("${report.competitorNumber}: $strSent");
+          else {
+            String message = jsonDecode(response.body)["message"];
+            responseList.add("${report.competitorNumber}: $message");
+          }
+          await Hive.box<ReportModel>(REPORT_BOX).delete(report.time);
+        } on Exception {
+          responseList.add("${report.competitorNumber}: $strDoesNotSend");
         }
-      } on Exception catch (e) {
-        emit(MainPageStateInitial());
-        emit(MainPageStateShowMessageDialog(
-            message: strYouNeedInternetConnection, messageColor: Colors.red));
       }
+
+      emit(MainPageStateShowMessageDialog(
+          messages:
+              responseList.length == 0 ? [strDoesNotSend] : responseList));
     } else {
-      emit(MainPageStateInitial());
-      emit(MainPageStateShowMessageDialog(message: strThereIsNoDataToSend));
+      emit(MainPageStateShowMessageDialog(messages: [strThereIsNoDataToSend]));
     }
   }
 
-  Future<http.Response> _sendData(
+  Future<Response> _sendData(
       {required String address,
       required String body,
       required String token}) async {
-    var client = http.Client();
+    Client client = Client();
     Map<String, String> requestHeaders = {
-      'Content-type': 'Application/json',
-      "Authorization": token
+      HttpHeaders.contentTypeHeader: 'application/json',
+      HttpHeaders.authorizationHeader: "$token"
     };
-    http.Response response = await client.post(
+    Response response = await client.post(
         Uri(
             host: API_BASE_URL,
             path: address,
@@ -171,7 +172,7 @@ class MainPageController extends Cubit<MainPageStates> {
       return true;
     else {
       emit(MainPageStateShowMessageDialog(
-          message: strFirstYouHaveToSendDataToServer,
+          messages: [strFirstYouHaveToSendDataToServer],
           messageColor: Colors.red));
       return false;
     }

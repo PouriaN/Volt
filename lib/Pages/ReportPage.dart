@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -54,8 +55,8 @@ class ReportPage extends StatelessWidget {
       required String token}) async {
     var client = http.Client();
     Map<String, String> requestHeaders = {
-      'Content-type': 'Application/json',
-      "Authorization": token
+      HttpHeaders.contentTypeHeader : 'application/json',
+      HttpHeaders.authorizationHeader : "$token"
     };
     http.Response response = await client.post(
         Uri(host: API_BASE_URL, path: address, port: SERVER_PORT, scheme: REQUEST_SCHEME),
@@ -108,12 +109,12 @@ class ReportPage extends StatelessWidget {
                         competitorNumber: int.parse(competitorController.text),
                         description: descController.text,
                         type: selectedReportType.toString().split(".")[1],
-                        time: DateTime.now().toIso8601String());
+                        time: DateTime.now().toUtc().toIso8601String());
 
                     try {
                       http.Response response = await _sendData(
                           address: "/competitor-histories/commit",
-                          body: jsonEncode([report]),
+                          body: jsonEncode([report.toJson()]),
                           token: context
                               .read<LoginPageController>()
                               .loginResponseModel
@@ -123,23 +124,23 @@ class ReportPage extends StatelessWidget {
                         await showDialog(
                           context: context,
                           builder: (ctx) => CustomDialog(
-                              message: strThisReportSentToServerSuccessfully),
+                              messages: [strThisReportSentToServerSuccessfully]),
                         );
                         Navigator.pop(context);
                       } else {
                         await showDialog(
                           context: context,
                           builder: (ctx) => CustomDialog(
-                              message: jsonDecode(response.body)["message"],
+                              messages: [jsonDecode(response.body)["message"]],
                               messageColor: Colors.red),
                         );
                       }
                     } on Exception catch (e) {
-                      await Hive.box<ReportModel>(REPORT_BOX).add(report);
+                      await Hive.box<ReportModel>(REPORT_BOX).put(report.time,report);
                       await showDialog(
                         context: context,
                         builder: (ctx) => CustomDialog(
-                            message: strReportAddedToLocalSuccessfully),
+                            messages: [strReportAddedToLocalSuccessfully]),
                       );
                       Navigator.pop(context);
                     }
@@ -147,7 +148,7 @@ class ReportPage extends StatelessWidget {
                     await showDialog(
                       context: context,
                       builder: (ctx) => CustomDialog(
-                          message: strFirstEnterValues,
+                          messages: [strFirstEnterValues],
                           messageColor: Colors.red),
                     );
                   }
