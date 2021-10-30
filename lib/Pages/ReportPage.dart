@@ -102,9 +102,7 @@ class ReportPage extends StatelessWidget {
             MainButton(
                 text: strAddReport,
                 callBack: () async {
-                  if (competitorController.text.isNotEmpty &&
-                      descController.text.isNotEmpty &&
-                      selectedReportType != null) {
+                  if (competitorController.text.isNotEmpty && selectedReportType != null) {
                     ReportModel report = ReportModel(
                         competitorNumber: int.parse(competitorController.text),
                         description: descController.text,
