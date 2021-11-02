@@ -1,16 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:racing_manager/Components/CustomDialog.dart';
-import 'package:racing_manager/Components/CustomTextFiled.dart';
-import 'package:racing_manager/Components/MainButton.dart';
-import 'package:racing_manager/Controllers/LoginPageController.dart';
-import 'package:racing_manager/Models/ReportModel.dart';
-import 'package:racing_manager/Resources/Constants.dart';
-import 'package:racing_manager/Resources/Strings.dart';
 import 'package:http/http.dart' as http;
+import 'package:volt/Components/CustomDialog.dart';
+import 'package:volt/Components/CustomTextFiled.dart';
+import 'package:volt/Components/MainButton.dart';
+import 'package:volt/Controllers/LoginPageController.dart';
+import 'package:volt/Models/ReportModel.dart';
+import 'package:volt/Resources/Constants.dart';
+import 'package:volt/Resources/Strings.dart';
 
 enum ReportType {
   PASS_CONTROL,
@@ -55,11 +56,15 @@ class ReportPage extends StatelessWidget {
       required String token}) async {
     var client = http.Client();
     Map<String, String> requestHeaders = {
-      HttpHeaders.contentTypeHeader : 'application/json',
-      HttpHeaders.authorizationHeader : "$token"
+      HttpHeaders.contentTypeHeader: 'application/json',
+      HttpHeaders.authorizationHeader: "$token"
     };
     http.Response response = await client.post(
-        Uri(host: API_BASE_URL, path: address, port: SERVER_PORT, scheme: REQUEST_SCHEME),
+        Uri(
+            host: API_BASE_URL,
+            path: address,
+            port: SERVER_PORT,
+            scheme: REQUEST_SCHEME),
         headers: requestHeaders,
         body: body);
     print(response.statusCode);
@@ -102,7 +107,8 @@ class ReportPage extends StatelessWidget {
             MainButton(
                 text: strAddReport,
                 callBack: () async {
-                  if (competitorController.text.isNotEmpty && selectedReportType != null) {
+                  if (competitorController.text.isNotEmpty &&
+                      selectedReportType != null) {
                     ReportModel report = ReportModel(
                         competitorNumber: int.parse(competitorController.text),
                         description: descController.text,
@@ -121,8 +127,9 @@ class ReportPage extends StatelessWidget {
                       if (response.statusCode == 200) {
                         await showDialog(
                           context: context,
-                          builder: (ctx) => CustomDialog(
-                              messages: [strThisReportSentToServerSuccessfully]),
+                          builder: (ctx) => CustomDialog(messages: [
+                            strThisReportSentToServerSuccessfully
+                          ]),
                         );
                         Navigator.pop(context);
                       } else {
@@ -134,7 +141,8 @@ class ReportPage extends StatelessWidget {
                         );
                       }
                     } on Exception catch (e) {
-                      await Hive.box<ReportModel>(REPORT_BOX).put(report.time,report);
+                      await Hive.box<ReportModel>(REPORT_BOX)
+                          .put(report.time, report);
                       await showDialog(
                         context: context,
                         builder: (ctx) => CustomDialog(

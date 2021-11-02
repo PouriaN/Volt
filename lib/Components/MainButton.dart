@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:racing_manager/Resources/TextThemes.dart';
+import 'package:volt/Resources/TextThemes.dart';
 
 class MainButton extends StatelessWidget {
   final String text;
@@ -7,7 +7,11 @@ class MainButton extends StatelessWidget {
   final bool enable;
   final Color color;
 
-  MainButton({required this.text, required this.callBack, this.color = Colors.blueAccent,this.enable = true});
+  MainButton(
+      {required this.text,
+      required this.callBack,
+      this.color = Colors.blueAccent,
+      this.enable = true});
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +21,12 @@ class MainButton extends StatelessWidget {
           child: ElevatedButton(
               onPressed: enable ? () => callBack() : null,
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(color),
-                minimumSize: MaterialStateProperty.all<Size>(Size(100, 50)),
+                  backgroundColor: MaterialStateProperty.all<Color>(color),
+                  minimumSize: MaterialStateProperty.all<Size>(Size(100, 50)),
                   alignment: Alignment.center,
-                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)))),
+                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30)))),
               child: enable
                   ? new Text(text,
                       style: textThemeMainButton, textAlign: TextAlign.center)

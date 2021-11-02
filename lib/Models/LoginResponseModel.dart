@@ -1,4 +1,3 @@
-
 class LoginResponseModel {
   String? authorization;
   String? message;

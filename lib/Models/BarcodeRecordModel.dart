@@ -16,7 +16,8 @@ class BarcodeRecordModel {
   BarcodeRecordModel({this.event, this.competitor, this.actualTime});
 
   BarcodeRecordModel.fromJson(Map<String, dynamic> json) {
-    event = json['event'] != null ? new EventModel.fromJson(json['event']) : null;
+    event =
+        json['event'] != null ? new EventModel.fromJson(json['event']) : null;
     competitor = json['competitor'] != null
         ? new EventModel.fromJson(json['competitor'])
         : null;

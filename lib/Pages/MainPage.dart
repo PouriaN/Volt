@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:racing_manager/Components/CustomDialog.dart';
-import 'package:racing_manager/Components/MainButton.dart';
-import 'package:racing_manager/Controllers/LoginPageController.dart';
-import 'package:racing_manager/Controllers/MainPageController.dart';
-import 'package:racing_manager/Resources/Strings.dart';
 import 'package:restart_app/restart_app.dart';
+import 'package:volt/Components/CustomDialog.dart';
+import 'package:volt/Components/MainButton.dart';
+import 'package:volt/Controllers/LoginPageController.dart';
+import 'package:volt/Controllers/MainPageController.dart';
+import 'package:volt/Resources/Strings.dart';
 
 class MainPage extends StatelessWidget {
   Dialog scanDialog(BuildContext context) => Dialog(
@@ -93,15 +93,15 @@ class MainPage extends StatelessWidget {
                       callBack: () =>
                           context.read<MainPageController>().showScanDialog()),
                   MainButton(
-                    text: strSendScanToServer,
-                    enable: state is! MainPageStateLoading,
-                    color: Colors.redAccent,
-                    callBack: () => context
-                        .read<MainPageController>()
-                        .sendBarcodeDataForServer(context
-                            .read<LoginPageController>()
-                            .loginResponseModel
-                            .authorization!)),
+                      text: strSendScanToServer,
+                      enable: state is! MainPageStateLoading,
+                      color: Colors.redAccent,
+                      callBack: () => context
+                          .read<MainPageController>()
+                          .sendBarcodeDataForServer(context
+                              .read<LoginPageController>()
+                              .loginResponseModel
+                              .authorization!)),
                   //   callBack: () {
                   //     context
                   //         .read<MainPageController>()

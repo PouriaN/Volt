@@ -2,8 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:racing_manager/Controllers/MainPageController.dart';
-import 'package:racing_manager/Models/ReportModel.dart';
+import 'package:volt/Controllers/MainPageController.dart';
+import 'package:volt/Models/ReportModel.dart';
+
 import 'Controllers/LoginPageController.dart';
 import 'Models/BarcodeRecordModel.dart';
 import 'Models/EventModel.dart';
@@ -41,7 +42,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Racing Manager',
+      title: 'Volt',
       theme: ThemeData(
         brightness: Brightness.dark,
         primaryColor: Colors.blueAccent,

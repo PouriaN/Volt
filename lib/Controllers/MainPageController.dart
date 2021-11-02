@@ -1,16 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:ui';
+
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:racing_manager/Models/BarcodeDataModel.dart';
-import 'package:racing_manager/Models/BarcodeRecordModel.dart';
-import 'package:racing_manager/Models/EventModel.dart';
-import 'package:racing_manager/Models/ReportModel.dart';
-import 'package:racing_manager/Resources/Constants.dart';
-import 'package:racing_manager/Resources/Strings.dart';
+import 'package:http/http.dart';
+import 'package:volt/Models/BarcodeDataModel.dart';
+import 'package:volt/Models/BarcodeRecordModel.dart';
+import 'package:volt/Models/EventModel.dart';
+import 'package:volt/Models/ReportModel.dart';
+import 'package:volt/Resources/Constants.dart';
+import 'package:volt/Resources/Strings.dart';
 
 abstract class MainPageStates {}
 
@@ -64,7 +65,8 @@ class MainPageController extends Cubit<MainPageStates> {
             messageColor: Colors.red));
       }
     } on Exception {
-      await Hive.box<BarcodeRecordModel>(BARCODE_BOX).put(barcodeRecord.actualTime,barcodeRecord);
+      await Hive.box<BarcodeRecordModel>(BARCODE_BOX)
+          .put(barcodeRecord.actualTime, barcodeRecord);
       emit(MainPageStateShowMessageDialog(
           messages: [strBarcodeAddedToLocalSuccessfully]));
     }
@@ -80,8 +82,7 @@ class MainPageController extends Cubit<MainPageStates> {
     if (barcodeList.length != 0) {
       List<String> responseList = <String>[];
 
-      for (BarcodeRecordModel barcode
-          in barcodeList) {
+      for (BarcodeRecordModel barcode in barcodeList) {
         try {
           Response response = await _sendData(
               address: "/checkpoint-histories/commit",
@@ -94,7 +95,8 @@ class MainPageController extends Cubit<MainPageStates> {
             String message = jsonDecode(response.body)["message"];
             responseList.add("${barcode.competitor!.id}: $message");
           }
-          await Hive.box<BarcodeRecordModel>(BARCODE_BOX).delete(barcode.actualTime);
+          await Hive.box<BarcodeRecordModel>(BARCODE_BOX)
+              .delete(barcode.actualTime);
         } on Exception {
           responseList.add("${barcode.competitor!.id}: $strDoesNotSend");
         }

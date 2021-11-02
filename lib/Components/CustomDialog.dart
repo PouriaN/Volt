@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:racing_manager/Resources/Strings.dart';
-import 'package:racing_manager/Resources/TextThemes.dart';
+import 'package:volt/Resources/Strings.dart';
+import 'package:volt/Resources/TextThemes.dart';
 
 class CustomDialog extends StatelessWidget {
   final List<String> messages;
@@ -22,7 +22,8 @@ class CustomDialog extends StatelessWidget {
               child: ListView.builder(
                   itemCount: messages.length,
                   itemBuilder: (context, index) => Text(messages[index],
-                      style: dialogMessageTextTheme.copyWith(color: messageColor),
+                      style:
+                          dialogMessageTextTheme.copyWith(color: messageColor),
                       textAlign: TextAlign.center)),
             ),
             ElevatedButton(

@@ -7,20 +7,22 @@ const String strSendScanToServer = "ارسال اسکن‌ها به سرور";
 const String strCreateReport = "ثبت گزارش تخلف";
 const String strSendReportsToServer = "ارسال گزارش تخلفات به سرور";
 
+const String strBarcodeAddedToLocalSuccessfully =
+    "خطا در اتصال اینترنت. کیو-آر کد بر روی دستگاه ذخیره شد";
+const String strReportAddedToLocalSuccessfully =
+    "خطا در اتصال اینترنت. گزارش بر روی دستگاه ذخیره شد";
 
-const String strBarcodeAddedToLocalSuccessfully = "خطا در اتصال اینترنت. کیو-آر کد بر روی دستگاه ذخیره شد";
-const String strReportAddedToLocalSuccessfully = "خطا در اتصال اینترنت. گزارش بر روی دستگاه ذخیره شد";
-
-const String strFirstYouHaveToSendDataToServer = "ابتدا اطلاعات ذخیره شده را ارسال کنید کنید";
-const String strThisReportSentToServerSuccessfully = "این گزارش با موفقیت به سرور ارسال شد";
-const String strThisBarcodeDataSentSuccessfully = "این کیو-آر کد با موفقیت به سرور ارسال شد";
-
+const String strFirstYouHaveToSendDataToServer =
+    "ابتدا اطلاعات ذخیره شده را ارسال کنید کنید";
+const String strThisReportSentToServerSuccessfully =
+    "این گزارش با موفقیت به سرور ارسال شد";
+const String strThisBarcodeDataSentSuccessfully =
+    "این کیو-آر کد با موفقیت به سرور ارسال شد";
 
 const String strCompetitorNumber = "شماره شرکت کننده";
 const String strDescription = "توضیحات";
 const String strSelectReportType = "انتخاب نوع تخلف";
 const String strAddReport = "ارسال گزارش تخلف";
-
 
 const String strPassControl = "عبور از کنترل بدون ثبت زمان";
 const String strEnterInGateFromWrongPath = "ورود به کنترل از مسیر مقابل";
@@ -35,6 +37,5 @@ const String strThereIsNoDataToSend = "اطلاعاتی برای ارسال وج
 
 const String strSent = "ارسال شد";
 const String strDoesNotSend = "ارسال نشد";
-
 
 const String strOK = "بسیار خب";

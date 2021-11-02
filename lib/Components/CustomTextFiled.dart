@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:racing_manager/Resources/TextThemes.dart';
+import 'package:volt/Resources/TextThemes.dart';
 
 class CustomTextField extends TextFormField {
   final bool isObscure;
