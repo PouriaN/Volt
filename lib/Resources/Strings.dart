@@ -8,7 +8,7 @@ const String strCreateReport = "ثبت گزارش تخلف";
 const String strSendReportsToServer = "ارسال گزارش تخلفات به سرور";
 
 const String strBarcodeAddedToLocalSuccessfully =
-    "خطا در اتصال اینترنت. کیو-آر کد بر روی دستگاه ذخیره شد";
+    "خطا در اتصال اینترنت. کیوآر کد با زمان - بر روی دستگاه ذخیره شد";
 const String strReportAddedToLocalSuccessfully =
     "خطا در اتصال اینترنت. گزارش بر روی دستگاه ذخیره شد";
 
@@ -17,7 +17,7 @@ const String strFirstYouHaveToSendDataToServer =
 const String strThisReportSentToServerSuccessfully =
     "این گزارش با موفقیت به سرور ارسال شد";
 const String strThisBarcodeDataSentSuccessfully =
-    "این کیو-آر کد با موفقیت به سرور ارسال شد";
+    "این کیوآر کد در زمان - با موفقیت به سرور ارسال شد";
 
 const String strCompetitorNumber = "شماره شرکت کننده";
 const String strDescription = "توضیحات";

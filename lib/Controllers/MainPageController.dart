@@ -44,8 +44,11 @@ class MainPageController extends Cubit<MainPageStates> {
     BarcodeDataModel barcode =
         BarcodeDataModel.fromJson(jsonDecode(barcodeData));
 
+    DateTime time = DateTime.now();
+    String formmated = "${time.hour}:${time.minute}:${time.second}";
+
     BarcodeRecordModel barcodeRecord = BarcodeRecordModel(
-      actualTime: DateTime.now().toUtc().toIso8601String(),
+      actualTime: time.toUtc().toIso8601String(),
       competitor: EventModel(id: barcode.competitorId),
       event: EventModel(id: barcode.eventId),
     );
@@ -57,7 +60,7 @@ class MainPageController extends Cubit<MainPageStates> {
       if (response.statusCode == 200) {
         emit(MainPageStateInitial());
         emit(MainPageStateShowMessageDialog(
-            messages: [strThisBarcodeDataSentSuccessfully]));
+            messages: [strThisBarcodeDataSentSuccessfully.replaceAll("-", formmated)]));
       } else {
         emit(MainPageStateInitial());
         emit(MainPageStateShowMessageDialog(
@@ -68,7 +71,7 @@ class MainPageController extends Cubit<MainPageStates> {
       await Hive.box<BarcodeRecordModel>(BARCODE_BOX)
           .put(barcodeRecord.actualTime, barcodeRecord);
       emit(MainPageStateShowMessageDialog(
-          messages: [strBarcodeAddedToLocalSuccessfully]));
+          messages: [strBarcodeAddedToLocalSuccessfully.replaceAll("-", formmated)]));
     }
   }
 
