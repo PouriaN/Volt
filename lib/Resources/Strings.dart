@@ -2,40 +2,43 @@ const String strLogin = "Login";
 const String strUsername = "Username";
 const String strPassword = "Password";
 
-const String strScanParticipant = "اسکن شرکت کننده";
-const String strSendScanToServer = "ارسال اسکن‌ها به سرور";
-const String strCreateReport = "ثبت گزارش تخلف";
-const String strSendReportsToServer = "ارسال گزارش تخلفات به سرور";
+const String strScanParticipant = "Scan Racer";
+const String strSendScanToServer = "Send Scans to Server";
+const String strCreateReport = "Submit Report";
+const String strSendReportsToServer = "Send Reports to Server";
 
 const String strBarcodeAddedToLocalSuccessfully =
-    "خطا در اتصال اینترنت. کیوآر کد با زمان - بر روی دستگاه ذخیره شد";
+    "Connection failed. QRCode with time - saved on device.";
+
 const String strReportAddedToLocalSuccessfully =
-    "خطا در اتصال اینترنت. گزارش بر روی دستگاه ذخیره شد";
+    "Connection failed. report saved on device.";
 
 const String strFirstYouHaveToSendDataToServer =
-    "ابتدا اطلاعات ذخیره شده را ارسال کنید کنید";
+    "First send local data to Server";
+
 const String strThisReportSentToServerSuccessfully =
-    "این گزارش با موفقیت به سرور ارسال شد";
+    "This report sent to server successfully.";
+
 const String strThisBarcodeDataSentSuccessfully =
-    "این کیوآر کد در زمان - با موفقیت به سرور ارسال شد";
+    "This QrCode sent with time - to server successfully.";
 
-const String strCompetitorNumber = "شماره شرکت کننده";
-const String strDescription = "توضیحات";
-const String strSelectReportType = "انتخاب نوع تخلف";
-const String strAddReport = "ارسال گزارش تخلف";
+const String strCompetitorNumber = "Racer Number";
+const String strDescription = "Description";
+const String strSelectReportType = "Select Report Type";
+const String strAddReport = "Send Report";
 
-const String strPassControl = "عبور از کنترل بدون ثبت زمان";
-const String strEnterInGateFromWrongPath = "ورود به کنترل از مسیر مقابل";
-const String strNotFastenSeatBelt = "نبستن کمربند ایمنی";
-const String strStopInMarshalRangeView = "توقف در دید یا محدوده کنترل";
-const String strReverseGear = "ورود دنده عقب به محدوده کنترل";
-const String strDangerousMovement = "رانندگی خطرناک";
-const String strTurnInControlArea = "دور زدن در محدوده کنترل";
+const String strPassControl = "Pass Control";
+const String strEnterInGateFromWrongPath = "Enter In Gate From Wrong Path";
+const String strNotFastenSeatBelt = "Not Fasten Seat Belt";
+const String strStopInMarshalRangeView = "Stop In Marshal Range View";
+const String strReverseGear = "Reverse Gear";
+const String strDangerousMovement = "Dangerous Movement";
+const String strTurnInControlArea = "Turn In Control Area";
 
-const String strFirstEnterValues = "خطا: ابتدا مقادیر را وارد کنید";
-const String strThereIsNoDataToSend = "اطلاعاتی برای ارسال وجود ندارد";
+const String strFirstEnterValues = "Failed: First enter values";
+const String strThereIsNoDataToSend = "There is no data to send";
 
-const String strSent = "ارسال شد";
-const String strDoesNotSend = "ارسال نشد";
+const String strSent = "Sent";
+const String strDoesNotSend = "Didn't Send";
 
-const String strOK = "بسیار خب";
+const String strOK = "OK";

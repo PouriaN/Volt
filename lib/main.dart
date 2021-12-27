@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -45,11 +44,10 @@ class _MyAppState extends State<MyApp> {
       title: 'Volt',
       theme: ThemeData(
         brightness: Brightness.dark,
-        primaryColor: Colors.blueAccent,
-        accentColor: Colors.cyan,
+        primaryColor: Colors.blueAccent
       ),
       builder: (context, child) =>
-          Directionality(textDirection: TextDirection.rtl, child: child!),
+          child!,
       initialRoute: isLoggedIn ? "/MainPage" : "/LoginPage",
       routes: <String, WidgetBuilder>{
         '/LoginPage': (BuildContext context) => new LoginPage(),

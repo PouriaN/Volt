@@ -140,7 +140,7 @@ class ReportPage extends StatelessWidget {
                               messageColor: Colors.red),
                         );
                       }
-                    } on Exception catch (e) {
+                    } on Exception {
                       await Hive.box<ReportModel>(REPORT_BOX)
                           .put(report.time, report);
                       await showDialog(
